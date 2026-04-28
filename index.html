@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Elite Cyber War System </title>
+
+<style>
+body{
+margin:0;
+background:black;
+color:#00ff88;
+font-family:monospace;
+overflow:hidden;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-2;
+}
+
+/* TOP HUD */
+#hud{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:45px;
+background:rgba(0,0,0,0.85);
+border-bottom:1px solid #00ff88;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 12px;
+z-index:10;
+}
+
+/* LOGIN */
+#login{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+z-index:20;
+}
+
+input{
+background:black;
+border:1px solid #00ff88;
+color:#00ff88;
+padding:10px;
+margin:5px;
+text-align:center;
+}
+
+button{
+padding:10px 20px;
+background:#00ff88;
+border:none;
+cursor:pointer;
+font-weight:bold;
+color:black;
+}
+
+/* WAR ROOM */
+#war{
+display:none;
+padding-top:60px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+padding:10px;
+}
+
+.panel{
+border:1px solid #00ff88;
+padding:10px;
+background:rgba(0,0,0,0.6);
+min-height:140px;
+box-shadow:0 0 15px #00ff88;
+}
+
+/* GLOBAL MAP */
+#map{
+position:relative;
+height:180px;
+overflow:hidden;
+}
+
+.node{
+position:absolute;
+width:8px;
+height:8px;
+background:red;
+border-radius:50%;
+animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+50%{transform:scale(2);opacity:0.4;}
+}
+
+/* ACCESS SCREEN */
+#access{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+z-index:30;
+}
+
+#access h1{
+font-size:42px;
+animation:blink 1s infinite;
+}
+
+@keyframes blink{
+50%{opacity:0.2;}
+}
+
+.line{
+white-space:pre;
+}
+
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div id="hud">
+<div>🟢 ELITE CYBER WAR SYSTEM (SIMULATION)</div>
+<div id="status">STANDBY MODE</div>
+</div>
+
+<!-- LOGIN -->
+<div id="login">
+<h2>CHENURA LOGIN</h2>
+<input id="u" placeholder="ENTER ANY WORD" />
+<input id="p" type="password" placeholder="ENTER ANY WORD" />
+<button onclick="startWar()">ENTER WAR ROOM</button>
+</div>
+
+<!-- WAR SYSTEM -->
+<div id="war">
+
+<div class="grid">
+
+<div class="panel" id="terminal">> SYSTEM READY</div>
+
+<div class="panel" id="ai">AI WAR ENGINE: OFFLINE</div>
+
+<div class="panel" id="firewall">GLOBAL DEFENSE GRID</div>
+
+<div class="panel" id="map">
+<div class="node" style="top:20px;left:30px"></div>
+<div class="node" style="top:80px;left:120px"></div>
+<div class="node" style="top:50px;left:200px"></div>
+</div>
+
+<div class="panel" id="missions">MISSIONS: 0 ACTIVE</div>
+
+<div class="panel" id="logs">SYSTEM LOG STREAM</div>
+
+</div>
+
+</div>
+
+<!-- ACCESS -->
+<div id="access">
+<h1>ACCESS GRANTED</h1>
+<p>WELCOME CHENURA</p>
+</div>
+
+<script>
+
+/* MATRIX */
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let letters="01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&".split("");
+let font=14;
+let cols=canvas.width/font;
+let drops=[];
+for(let i=0;i<cols;i++)drops[i]=1;
+
+function draw(){
+ctx.fillStyle="rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="#00ff88";
+ctx.font=font+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+let text=letters[Math.floor(Math.random()*letters.length)];
+ctx.fillText(text,i*font,drops[i]*font);
+if(drops[i]*font>canvas.height&&Math.random()>0.975) drops[i]=0;
+drops[i]++;
+}
+}
+setInterval(draw,30);
+
+/* LOGIN */
+function startWar(){
+let u=document.getElementById("u").value;
+let p=document.getElementById("p").value;
+if(u && p){
+document.getElementById("login").style.display="none";
+document.getElementById("war").style.display="block";
+bootSequence();
+}
+}
+
+/* WAR BOOT SEQUENCE */
+function bootSequence(){
+let lines=[
+"Initializing global war simulation...",
+"Syncing satellite network grid...",
+"Activating AI defense systems...",
+"Deploying cyber response units...",
+"Rendering world map nodes..."
+];
+
+let i=0;
+let term=document.getElementById("terminal");
+
+let interval=setInterval(()=>{
+if(i<lines.length){
+term.innerHTML+="\n> "+lines[i];
+i++;
+}else{
+clearInterval(interval);
+
+document.getElementById("status").innerText="LIVE SIMULATION ACTIVE";
+document.getElementById("ai").innerText="AI WAR ENGINE: ONLINE";
+document.getElementById("missions").innerText="MISSIONS: 3 SIMULATED OPERATIONS";
+
+setTimeout(()=>{
+document.getElementById("access").style.display="flex";
+},1500);
+}
+},800);
+}
+
+</script>
+
+</body>
+</html>
